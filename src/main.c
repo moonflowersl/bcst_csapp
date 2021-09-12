@@ -29,16 +29,12 @@ int main()
     write64bits_dram(va2pa(0x7ffffffee1f8), 0x12340000);
     write64bits_dram(va2pa(0x7ffffffee1f0), 0x08000660);    // rsp
 
-    uint64_t pa = va2pa(0xffffffee210);
-
-    printf("%16lx\n", *((uint64_t *)(&mm[pa])));
-
     print_register();
     print_stack();
 
     // run inst 
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 7; i++)
     {
         instruction_cycle();
         
