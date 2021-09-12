@@ -1,6 +1,8 @@
 #include "memory/instruction.h"
 #include "cpu/mmu.h"
 #include "cpu/register.h"
+#include "memory/dram.h"
+#include <stdio.h>
 
 static uint64_t decode_od(od_t od)
 {
@@ -86,6 +88,8 @@ void instruction_cycle()
     
     // add_reg_reg_handler(src = &rax, dst = &rbx)
     handler(src, dst);
+
+    printf("    %s\n", instr->code);
 }
 
 void init_handler_table()
@@ -96,8 +100,21 @@ void init_handler_table()
 
 void mov_reg_reg_handler(uint64_t src, uint64_t dst)
 {
+    // src: reg
+    // dst: reg
     *(uint64_t *)dst = *(uint64_t *)src;
     reg.rip = reg.rip + sizeof(inst_t);
+}
+
+void call_handler(uint64_t src, uint64_t dst)
+{
+    // src: imm address of call function
+    reg.rsp = reg.rsp - 8;
+    // write return address to rsp memory
+    write64bits_dram(
+        va2pa(reg.rsp),
+        reg.rip + sizeof(inst_t)
+    );
 }
 
 void add_reg_reg_handler(uint64_t src, uint64_t dst)

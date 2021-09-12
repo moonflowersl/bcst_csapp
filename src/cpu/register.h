@@ -1,3 +1,6 @@
+#ifndef register_guard
+#define register_guard
+
 #include<stdlib.h>
 #include<stdint.h>
 
@@ -28,3 +31,5 @@ typedef struct CPU_STRUCT
 } reg_t;
 
 reg_t reg;
+
+#endif
